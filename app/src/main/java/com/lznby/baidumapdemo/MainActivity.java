@@ -9,12 +9,13 @@ import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.model.LatLng;
-import com.lznby.baidumapdemo.map.DrawMark;
+import com.lznby.baidumapdemo.json.Hydrant;
 import com.lznby.baidumapdemo.network.Util;
 import com.lznby.baidumapdemo.util.Accessibility;
 
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mMarkNameTV;
 
+    private Hydrant[] mHydrant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +48,12 @@ public class MainActivity extends AppCompatActivity {
         mapView = (MapView) findViewById(R.id.bmapView);
         baiduMap = mapView.getMap();
 
-        //JSON解析测试
-        Util.sendRequestWithOkHttp();
+        //基本控件
+        mMarkNameTV = (TextView) findViewById(R.id.mark_name_tv);//为什么写在onCreate方法中不行，无法获取到值
+
+
+        //JSON解析测试及绘制标记
+        Util.sendRequestWithOkHttp(baiduMap);
 
         //权限申请
         Accessibility.getPermission(MainActivity.this,MainActivity.this);
@@ -62,17 +68,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 Toast.makeText(MainActivity.this, marker.getId().toString() + "", Toast.LENGTH_SHORT).show();
+/*
                 mMarkNameTV = (TextView) findViewById(R.id.mark_name_tv);//为什么写在onCreate方法中不行，无法获取到值
+*/
                 mMarkNameTV.setVisibility(View.VISIBLE);
                 return false;
             }
         };
 
         //绘制标记
-        DrawMark.drawMarks(baiduMap);
+        //DrawMark.drawMarks(baiduMap);
 
         //为自定义Mark添加监听
         baiduMap.setOnMarkerClickListener(onMarkerClickListener);
+
+
 
 
         /**
@@ -85,6 +95,31 @@ public class MainActivity extends AppCompatActivity {
                 LatLng ll = new LatLng(29.86, 121.59);
                 MapStatusUpdate update = MapStatusUpdateFactory.newLatLngZoom(ll, 12f);//设置缩放大小
                 baiduMap.animateMapStatus(update);
+            }
+        });
+
+
+        /**
+         * 地图单击事件
+         */
+        baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
+
+            /**
+             * 地图单击事件回调函数
+             * @param latLng 点击的地理坐标
+             */
+            @Override
+            public void onMapClick(LatLng latLng) {
+                mMarkNameTV.setVisibility(View.GONE);
+            }
+
+            /**
+             * 地图内 Poi 单击事件回调函数
+             * @param mapPoi 点击的 poi 信息
+             */
+            @Override
+            public boolean onMapPoiClick(MapPoi mapPoi) {
+                return false;
             }
         });
 

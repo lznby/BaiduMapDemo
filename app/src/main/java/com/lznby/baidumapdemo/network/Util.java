@@ -1,10 +1,11 @@
 package com.lznby.baidumapdemo.network;
 
-import android.util.Log;
-
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lznby.baidumapdemo.json.Hydrant;
+import com.lznby.baidumapdemo.map.DrawMark;
 
 import java.util.List;
 
@@ -13,8 +14,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class Util {
+
     //okhttp方式
-    public static void sendRequestWithOkHttp(){
+    public static void sendRequestWithOkHttp(final BaiduMap baiduMap){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -26,21 +28,38 @@ public class Util {
                             .build();
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();
-                    parseJSONWithGSON(responseData);//GSON解析JSON
+                    parseJSONWithGSON(responseData,baiduMap);//GSON解析JSON
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }).start();
+
     }
 
 
     //GSON解析JSON
-    private static void parseJSONWithGSON(String jsonData){
+    private static void parseJSONWithGSON(String jsonData,BaiduMap baiduMap){
         Gson gson = new Gson();
-        List<Hydrant> testList = gson.fromJson(jsonData,new TypeToken<List<Hydrant>>(){}.getType());
-        for(Hydrant hydrant : testList){
+        List<Hydrant> hydrantList = gson.fromJson(jsonData,new TypeToken<List<Hydrant>>(){}.getType());
+
+        //转化为数组,并在地图上进行标识。
+        Hydrant[] hydrants  = new Hydrant[hydrantList.size()];
+        hydrantList.toArray(hydrants);
+        boolean flag = false;
+        for (int i=0; i<hydrants.length; i++) {
+
+            if (hydrants[i].getStatus() == 1){
+                flag = true;
+            } else {
+                flag =false;
+            }
+            DrawMark.drawMark(baiduMap,new LatLng(hydrants[i].getLatitude(),hydrants[i].getLongitude()),flag);
+        }
+
+/*测试使用*/
+/*        for(Hydrant hydrant : hydrantList){
 
             Log.d("Hydrant","getHydrant_id is " + hydrant.getHydrant_id());
             Log.d("Hydrant","getArea_id is " + hydrant.getArea_id());
@@ -60,6 +79,7 @@ public class Util {
             Log.d("Hydrant","getImg_url is " + hydrant.getImg_url());
             Log.d("Hydrant","getTime is " + hydrant.getTime());
 
-        }
+        }*/
+
     }
 }
