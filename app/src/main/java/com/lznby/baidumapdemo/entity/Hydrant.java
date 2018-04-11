@@ -1,9 +1,13 @@
-package com.lznby.baidumapdemo.json;
+package com.lznby.baidumapdemo.entity;
+
+import org.litepal.crud.DataSupport;
+
+import java.io.Serializable;
 
 /**
- * 消防栓基本信息实体类
+ * Hydrant数据
  */
-public class Hydrant {
+public class Hydrant extends DataSupport implements Serializable {
     private long hydrant_id;
     private long area_id;
     private long node_id;
@@ -157,4 +161,5 @@ public class Hydrant {
     public void setTime(String time) {
         this.time = time;
     }
+
 }

@@ -1,0 +1,11 @@
+<litepal>
+
+    <dbname value="hydrant_db" />
+
+    <version value="1" />
+
+    <list>
+        <mapping class="com.lznby.baidumapdemo.entity.Hydrant" />
+    </list>
+
+</litepal>

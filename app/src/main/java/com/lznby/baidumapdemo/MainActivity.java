@@ -1,9 +1,12 @@
 package com.lznby.baidumapdemo;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,21 +18,41 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.model.LatLng;
-import com.lznby.baidumapdemo.json.Hydrant;
-import com.lznby.baidumapdemo.network.Util;
+import com.lznby.baidumapdemo.entity.Hydrant;
+import com.lznby.baidumapdemo.entity.URL;
+import com.lznby.baidumapdemo.map.MapTools;
+import com.lznby.baidumapdemo.network.NetWorkRequest;
 import com.lznby.baidumapdemo.util.Accessibility;
+import com.lznby.baidumapdemo.util.Tools;
 
-import cn.jpush.android.api.JPushInterface;
+import org.litepal.crud.DataSupport;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private MapView mapView;
 
     private BaiduMap baiduMap;
 
-    private TextView mMarkNameTV;
+    private RelativeLayout mMarkShowRL;
 
-    private Hydrant[] mHydrant;
+    private TextView mMarkAddressTV;
+
+    private TextView mMarkStatusTV;
+
+    private TextView mMarkPressureTV;
+
+    private TextView mMarkTimeTV;
+
+    private TextView mMarkPrincipalNameTV;
+
+    private TextView mMarkPrincicalPhoneTV;
+
+    private Hydrant mHydrant;
+
+    private Button mDetailedInformation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,55 +61,38 @@ public class MainActivity extends AppCompatActivity {
         //
         SDKInitializer.initialize(getApplicationContext());
 
-        //极光推送初始化
-        JPushInterface.setDebugMode(true);
-        JPushInterface.init(this);
-
         setContentView(R.layout.activity_main);
 
         //百度地图控件
         mapView = (MapView) findViewById(R.id.bmapView);
+
+        //设置隐藏缩放和扩大的百度地图的默认的比例按钮
+        MapTools.changeDefaultBaiduMapView(mapView);
+
         baiduMap = mapView.getMap();
 
-        //基本控件
-        mMarkNameTV = (TextView) findViewById(R.id.mark_name_tv);//为什么写在onCreate方法中不行，无法获取到值
+        //标记缩略信息控件
+        mMarkAddressTV = (TextView) findViewById(R.id.mark_address_tv);
+        mMarkShowRL = (RelativeLayout) findViewById(R.id.mark_show_rl);
+        mMarkStatusTV = (TextView) findViewById(R.id.mark_status_tv);
+        mMarkPressureTV = (TextView) findViewById(R.id.mark_pressure_tv);
+        mMarkTimeTV = (TextView) findViewById(R.id.mark_time_tv);
+        mMarkPrincipalNameTV = (TextView) findViewById(R.id.mark_principal_name_tv);
+        mMarkPrincicalPhoneTV = (TextView) findViewById(R.id.mark_principal_phone_tv);
+        mDetailedInformation = (Button) findViewById(R.id.detailed_information_bt);
 
+        //Button添加点击事件
+        mDetailedInformation.setOnClickListener(this);
 
         //JSON解析测试及绘制标记
-        Util.sendRequestWithOkHttp(baiduMap);
+        NetWorkRequest.request(URL.HYDRANT_INFORMATION_JSON_URL,baiduMap);
 
         //权限申请
         Accessibility.getPermission(MainActivity.this,MainActivity.this);
 
 
         /**
-         * 绘制多个Mark标记及设置监听
-         */
-
-        //设置监听事件
-        BaiduMap.OnMarkerClickListener onMarkerClickListener = new BaiduMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(MainActivity.this, marker.getId().toString() + "", Toast.LENGTH_SHORT).show();
-/*
-                mMarkNameTV = (TextView) findViewById(R.id.mark_name_tv);//为什么写在onCreate方法中不行，无法获取到值
-*/
-                mMarkNameTV.setVisibility(View.VISIBLE);
-                return false;
-            }
-        };
-
-        //绘制标记
-        //DrawMark.drawMarks(baiduMap);
-
-        //为自定义Mark添加监听
-        baiduMap.setOnMarkerClickListener(onMarkerClickListener);
-
-
-
-
-        /**
-         * 地图加载完成监听事件
+         * 地图加载完成监听事件,设置地图显示的范围及中心点,地图加载完成后添加Mark监听事件
          */
         baiduMap.setOnMapLoadedCallback(new BaiduMap.OnMapLoadedCallback() {
             @Override
@@ -95,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
                 LatLng ll = new LatLng(29.86, 121.59);
                 MapStatusUpdate update = MapStatusUpdateFactory.newLatLngZoom(ll, 12f);//设置缩放大小
                 baiduMap.animateMapStatus(update);
+
+                //为自定义Mark添加监听
+                baiduMap.setOnMarkerClickListener(onMarkerClickListener);
             }
         });
 
@@ -110,7 +119,12 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onMapClick(LatLng latLng) {
-                mMarkNameTV.setVisibility(View.GONE);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMarkShowRL.setVisibility(View.GONE);
+                    }
+                });
             }
 
             /**
@@ -155,6 +169,47 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * 设置Mark自定义监听事件
+     */
+    BaiduMap.OnMarkerClickListener onMarkerClickListener = new BaiduMap.OnMarkerClickListener() {
+        @Override
+        public boolean onMarkerClick(Marker marker) {
+
+            mMarkShowRL.setVisibility(View.VISIBLE);
+
+            //获取坐标的经纬度用于查询对应坐标
+            double longitude = marker.getPosition().longitude;//经度
+            double latitude = marker.getPosition().latitude;//纬度
+            getPoint(longitude,latitude);
+            return false;
+        }
+    };
+
+
+    /**
+     * 设置点击Mark后UI变化事件
+     * @param longitude
+     * @param latitude
+     */
+    public void getPoint(double longitude, double latitude){
+        final List<Hydrant> hydrantList = DataSupport.where("longitude like ? and latitude like ?", longitude+"",latitude+"").find(Hydrant.class);
+        final Hydrant hydrant = hydrantList.remove(0);
+        mHydrant = hydrant;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mMarkAddressTV.setText(mHydrant.getAddress());
+                mMarkStatusTV.setText(Tools.estimateStatus(mHydrant.getStatus()));
+                mMarkPressureTV.setText(mHydrant.getPressure()+"");
+                mMarkTimeTV.setText(mHydrant.getTime());
+                mMarkPrincipalNameTV.setText(mHydrant.getPrincipal_name());
+                mMarkPrincicalPhoneTV.setText(mHydrant.getPrincipal_phone());
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -173,4 +228,15 @@ public class MainActivity extends AppCompatActivity {
         mapView.onDestroy();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.detailed_information_bt:
+                Toast.makeText(this,"进入详情界面"+Tools.estimateStatus(mHydrant.getStatus()), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this,DetailedActivity.class);
+                intent.putExtra("hydrant",mHydrant);
+                startActivity(intent);
+                break;
+        }
+    }
 }

@@ -23,11 +23,11 @@ public class MarkBitmap {
         BitmapDescriptor bitmap_white = BitmapDescriptorFactory
                 .fromResource(R.drawable.mark_white);
 
-        ArrayList<BitmapDescriptor> giflist = new ArrayList<BitmapDescriptor>();
+        ArrayList<BitmapDescriptor> gifList = new ArrayList<BitmapDescriptor>();
 
-        giflist.add(bitmap_red);
-        giflist.add(bitmap_white);
-        return giflist;
+        gifList.add(bitmap_red);
+        gifList.add(bitmap_white);
+        return gifList;
     }
 
     /**

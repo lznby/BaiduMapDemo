@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="更新时间："
+            android:id="@+id/mark_time_htv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/mark_time_tv"
+            android:layout_toRightOf="@+id/mark_time_htv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="地址："
+            android:id="@+id/mark_address_htv"
+            android:layout_below="@+id/mark_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/mark_address_tv"
+            android:layout_toRightOf="@+id/mark_address_htv"
+            android:layout_below="@+id/mark_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="水压状态："
+            android:id="@+id/mark_status_htv"
+            android:layout_below="@+id/mark_address_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/mark_status_tv"
+            android:layout_below="@id/mark_address_tv"
+            android:layout_toRightOf="@+id/mark_status_htv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="水压："
+            android:id="@+id/mark_pressure_htv"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/mark_status_tv"
+            android:layout_below="@+id/mark_address_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/mark_pressure_tv"
+            android:layout_toRightOf="@+id/mark_pressure_htv"
+            android:layout_below="@+id/mark_address_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="负责人："
+            android:id="@+id/mark_principal_name_htv"
+            android:layout_below="@+id/mark_pressure_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/mark_principal_name_tv"
+            android:layout_toRightOf="@+id/mark_principal_name_htv"
+            android:layout_below="@+id/mark_pressure_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="联系电话："
+            android:id="@+id/mark_principal_phone_htv"
+            android:layout_toRightOf="@+id/mark_principal_name_tv"
+            android:layout_marginLeft="20dp"
+            android:layout_below="@+id/mark_pressure_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/mark_principal_phone_tv"
+            android:layout_toRightOf="@+id/mark_principal_phone_htv"
+            android:layout_below="@+id/mark_pressure_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/detailed_information_bt"
+            android:background="@null"
+            android:text="详情"
+            android:layout_below="@+id/mark_pressure_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+</ScrollView>
