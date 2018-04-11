@@ -1,4 +1,4 @@
-package com.lznby.baidumapdemo;
+package com.lznby.baidumapdemo.util;
 
 import android.app.Application;
 import android.content.Context;

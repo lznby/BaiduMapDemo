@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Hydrant mHydrant;
 
     private Button mDetailedInformation;
+    private Button mListInformationBT;
 
 
     @Override
@@ -80,9 +81,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMarkPrincipalNameTV = (TextView) findViewById(R.id.mark_principal_name_tv);
         mMarkPrincicalPhoneTV = (TextView) findViewById(R.id.mark_principal_phone_tv);
         mDetailedInformation = (Button) findViewById(R.id.detailed_information_bt);
+        mListInformationBT = (Button) findViewById(R.id.list_information_bt);
 
         //Button添加点击事件
         mDetailedInformation.setOnClickListener(this);
+        mListInformationBT.setOnClickListener(this);
+
 
         //JSON解析测试及绘制标记
         NetWorkRequest.request(URL.HYDRANT_INFORMATION_JSON_URL,baiduMap);
@@ -232,11 +236,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.detailed_information_bt:
-                Toast.makeText(this,"进入详情界面"+Tools.estimateStatus(mHydrant.getStatus()), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,"进入详情界面"+Tools.estimateStatus(mHydrant.getStatus()), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this,DetailedActivity.class);
                 intent.putExtra("hydrant",mHydrant);
                 startActivity(intent);
                 break;
+            case R.id.list_information_bt:
+                Intent intentList = new Intent(MainActivity.this,ListCardActivity.class);
+                startActivity(intentList);
         }
     }
 }

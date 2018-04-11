@@ -10,8 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.lznby.baidumapdemo.entity.Hydrant;
 import com.lznby.baidumapdemo.util.Tools;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetailedActivity extends AppCompatActivity {
 
@@ -94,8 +102,31 @@ public class DetailedActivity extends AppCompatActivity {
         mFireControl.setText("消防中心："+hydrant.getFire_control()+"");
         mFireControlPhoneTV.setText("消防中心电话："+hydrant.getPrincipal_phone()+"");
         mDescriptionTV.setText("备注："+hydrant.getDescription()+"");
-        mTimeTV.setText("更新时间："+hydrant.getTime()+"");
 
+
+        /**
+         * 水压曲线图绘制
+         */
+
+        LineChart mLineChart = (LineChart) findViewById(R.id.lineChart);
+        //显示边界
+        mLineChart.setDrawBorders(true);
+        //设置数据
+        List<Entry> entries = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            entries.add(new Entry(i, (float) (Math.random()) * 80));
+        }
+
+
+        XAxis xAxis = mLineChart.getXAxis();//得到X轴
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//设置X轴的位置, 值：BOTTOM,BOTH_SIDED,BOTTOM_INSIDE,TOP,TOP_INSIDE
+        xAxis.setGranularity(1f);//设置X轴间最小距离
+
+        //一个LineDataSet就是一条线
+        LineDataSet lineDataSet = new LineDataSet(entries, "温度");
+        LineData data = new LineData(lineDataSet);
+        mLineChart.setData(data);
+        //xAxis.setLabelCount(12, true);//设置X轴的刻度数量
 
     }
 

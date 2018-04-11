@@ -2,8 +2,6 @@ package com.lznby.baidumapdemo.util;
 
 import android.app.ProgressDialog;
 
-import com.lznby.baidumapdemo.MyApplication;
-
 /**
  * 非重要逻辑处理类
  */

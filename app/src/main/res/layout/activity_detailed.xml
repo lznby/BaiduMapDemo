@@ -157,6 +157,19 @@
             </android.support.v7.widget.CardView>
 
             <!-- 此处显示水压状态曲线图 -->
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/lineChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+
 
         </LinearLayout>
 
