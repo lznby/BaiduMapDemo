@@ -4,10 +4,13 @@ import android.text.TextUtils;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.model.LatLng;
+import com.github.mikephil.charting.charts.LineChart;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lznby.baidumapdemo.entity.Hydrant;
+import com.lznby.baidumapdemo.entity.Pressure;
 import com.lznby.baidumapdemo.map.DrawMark;
+import com.lznby.baidumapdemo.util.DrawChart;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,9 +20,12 @@ import java.util.List;
 
 public class Utility {
     /**
-     * 解析和处理服务器返回的省级数据
+     * 通过get请求获取标记的基本信息
+     * @param response
+     * @param baiduMap
+     * @return
      */
-    public static boolean handleProvinceResponse(String response, BaiduMap baiduMap){
+    public static boolean handleHydrantResponse(String response, BaiduMap baiduMap){
         if(!TextUtils.isEmpty(response)){
             try {
                 //使用JSONObject方式解析JSON文件
@@ -60,18 +66,45 @@ public class Utility {
                 hydrantList.toArray(hydrants);
                 boolean flag = false;
                 for (int i=0; i<hydrants.length; i++) {
-
+                    //判断状态
                     if (hydrants[i].getStatus() == 1 || hydrants[i].getStatus() == 2){
                         flag = true;
                     } else {
                         flag =false;
                     }
+                    //地图上绘制标记
                     DrawMark.drawMark(baiduMap,new LatLng(hydrants[i].getLatitude(),hydrants[i].getLongitude()),flag);
                 }
 
-
-
                 return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 通过post请求获取历史水压数据并绘制曲线
+     * @param response 请求结果
+     * @param lineChart 曲线图标对象
+     * @return
+     */
+    public static boolean handlePressureResponse(String response, LineChart lineChart) {
+        if(!TextUtils.isEmpty(response)){
+            try {
+
+                Gson gson = new Gson();
+                List<Pressure> pressureList = gson.fromJson(response,new TypeToken<List<Pressure>>(){}.getType());
+
+                //转化为数组形式
+                Pressure[] pressures  = new Pressure[pressureList.size()];
+                pressureList.toArray(pressures);
+
+                //绘制曲线
+                DrawChart.drawChart(lineChart,pressures);
+                return true;
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

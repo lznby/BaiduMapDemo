@@ -1,11 +1,12 @@
 package com.lznby.baidumapdemo;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.lznby.baidumapdemo.entity.Hydrant;
 import com.lznby.baidumapdemo.util.HydrantAdapter;
@@ -19,12 +20,15 @@ import java.util.List;
  * 清单形式显示
  */
 
-public class ListCardActivity extends AppCompatActivity {
+public class ListCardActivity extends AppCompatActivity implements View.OnClickListener{
 
     private List<Hydrant> mHydrantList = new ArrayList<>();
+
     private HydrantAdapter adapter;
+
     //下拉刷新控件
     private SwipeRefreshLayout swipeRefresh;
+    private FloatingActionButton mCardListFAB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +36,13 @@ public class ListCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_card);
 
         //以toolbar代替ActivityBar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);*/
+        /*setSupportActionBar(toolbar);*/
 
-        //水果
+        mCardListFAB = (FloatingActionButton) findViewById(R.id.card_list_fab);
+        mCardListFAB.setOnClickListener(this);
+
+        //Hydrant信息刷新
         initHydrant();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this,1);
@@ -45,7 +52,7 @@ public class ListCardActivity extends AppCompatActivity {
 
         //下拉刷新
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);//下拉刷新进度的颜色
+        swipeRefresh.setColorSchemeResources(R.color.colorLightBlue);//下拉刷新进度的颜色
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -64,7 +71,7 @@ public class ListCardActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -86,5 +93,14 @@ public class ListCardActivity extends AppCompatActivity {
     private void initHydrant(){
         //mHydrantList.clear();
         mHydrantList = DataSupport.findAll(Hydrant.class);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.card_list_fab:
+                finish();
+                break;
+        }
     }
 }

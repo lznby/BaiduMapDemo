@@ -27,7 +27,7 @@ public class HydrantAdapter extends RecyclerView.Adapter<HydrantAdapter.ViewHold
     private List<Hydrant> mHydrant;
     static class ViewHolder extends RecyclerView.ViewHolder{
         CardView cardView;
-        private final TextView mCardHyrantIdTV;
+        private final TextView mCardHydrantIdTV;
         private final TextView mCardStatusTV;
         private final TextView mCardPrincicalNameTV;
         private final TextView mCardPrincicalPhoneTV;
@@ -38,7 +38,7 @@ public class HydrantAdapter extends RecyclerView.Adapter<HydrantAdapter.ViewHold
             super(view);
             cardView = (CardView) view;
 
-            mCardHyrantIdTV = (TextView) view.findViewById(R.id.card_hydrant_id_tv);
+            mCardHydrantIdTV = (TextView) view.findViewById(R.id.card_hydrant_id_tv);
             mCardStatusTV = (TextView) view.findViewById(R.id.card_status_tv);
             mCardPrincicalNameTV = (TextView) view.findViewById(R.id.card_princical_name);
             mCardPrincicalPhoneTV = (TextView) view.findViewById(R.id.card_princical_phone);
@@ -77,7 +77,7 @@ public class HydrantAdapter extends RecyclerView.Adapter<HydrantAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Hydrant hydrant = mHydrant.get(position);
-        holder.mCardHyrantIdTV.setText("消防栓编号："+hydrant.getHydrant_id()+"");
+        holder.mCardHydrantIdTV.setText("消防栓编号："+hydrant.getHydrant_id()+"");
         holder.mCardStatusTV.setText("水压状态："+Tools.estimateStatus(hydrant.getStatus()));
         holder.mCardPrincicalNameTV.setText("负责人姓名："+hydrant.getPrincipal_name());
         holder.mCardPrincicalPhoneTV.setText("负责人电话："+hydrant.getPrincipal_phone());

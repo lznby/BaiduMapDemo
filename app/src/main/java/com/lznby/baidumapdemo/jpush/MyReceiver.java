@@ -1,19 +1,32 @@
 package com.lznby.baidumapdemo.jpush;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.lznby.baidumapdemo.MainActivity;
+import com.lznby.baidumapdemo.R;
+import com.lznby.baidumapdemo.util.MyApplication;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Iterator;
 
 import cn.jpush.android.api.JPushInterface;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
+
 public class MyReceiver extends BroadcastReceiver {
 
     private static final String TAG = "JIGUANG";
@@ -42,6 +55,33 @@ public class MyReceiver extends BroadcastReceiver {
             } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
 
+
+                Intent intent2 = new Intent(MyApplication.getContext(),MainActivity.class);
+                PendingIntent pi = PendingIntent.getActivity(MyApplication.getContext(),0,intent2,0);
+                //获取通知管理器
+                NotificationManager manager = (NotificationManager)MyApplication.getContext().getSystemService(NOTIFICATION_SERVICE);
+                //创建一个通知对象
+                Notification notification =  new NotificationCompat.Builder(MyApplication.getContext())
+                        .setContentTitle("this is title")//设置通知标题
+                        .setContentText("this is content textthis is content textthis is content textthis is content textthis is content textthis is content textthis is content text")//设置通知内容
+                        .setWhen(System.currentTimeMillis())//设置通知显示的延迟时间
+                        .setSmallIcon(R.mipmap.ic_launcher)//设置通知小图标
+                        .setContentIntent(pi)//添加启动另一个活动的意图
+                        .setAutoCancel(true)//设置点击通知后，通知是否会消失，true小时，false不消失
+                        .setSound(Uri.fromFile(new File("/system/media/audio/audio/ringtones/Luna.ogg")))//设置通知声音
+                        .setVibrate(new long[]{1000,1000,1000,1000})//设置消息震动，出入的为一个long的数组，偶数位为不震动的时间，奇数位为震动时间
+                        .setLights(Color.GREEN,1000,1000)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)//设置通知优先级为最高
+                        //.setStyle(new NotificationCompat.BigTextStyle().bigText("这是一个非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常长的标题！"))
+                        .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.drawable.hydrant)))//通知中显示大图片
+                        .setLargeIcon(BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.mipmap.ic_launcher)).build();//设置通知大图标
+                //启动通知
+                manager.notify(1,notification);
+
+
+
+
+
                 // 对应极光后台的 - 自定义消息  默认不会出现在notification上 所以一般都选用发送通知
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
@@ -50,7 +90,6 @@ public class MyReceiver extends BroadcastReceiver {
 
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
-
 
                 //打开自定义的Activity
                 Intent i = new Intent(context,MainActivity.class);

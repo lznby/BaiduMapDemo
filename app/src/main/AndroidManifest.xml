@@ -14,6 +14,9 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
+    <!--通知权限——震动权限-->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
     <application
         android:name=".util.MyApplication"
         android:allowBackup="true"

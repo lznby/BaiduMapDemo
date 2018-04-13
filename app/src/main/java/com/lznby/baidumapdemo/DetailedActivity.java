@@ -3,46 +3,70 @@ package com.lznby.baidumapdemo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.lznby.baidumapdemo.entity.Hydrant;
+import com.lznby.baidumapdemo.entity.URL;
+import com.lznby.baidumapdemo.network.HttpUtil;
+import com.lznby.baidumapdemo.network.Utility;
 import com.lznby.baidumapdemo.util.Tools;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
-public class DetailedActivity extends AppCompatActivity {
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+public class DetailedActivity extends AppCompatActivity implements View.OnClickListener{
 
     private ImageView mImageView;
 
     private TextView mHydrantIdTV;
 
     private Hydrant hydrant;
+
     private TextView mAreaIdTV;
+
     private TextView mNodeIdTV;
+
     private TextView mAddressTV;
+
     private TextView mCheckPhointTypeTV;
+
     private TextView mCheckPointPhoneTV;
+
     private TextView mPressure;
+
     private TextView mLongitudeTV;
+
     private TextView mLatitudeTV;
+
     private TextView mStatusTV;
+
     private TextView mPrincipalNameTV;
+
     private TextView mPrincipalPhoneTV;
+
     private TextView mFireControl;
+
     private TextView mFireControlPhoneTV;
+
     private TextView mDescriptionTV;
+
     private TextView mTimeTV;
+
+    private FloatingActionButton mDetailedInformationFAB;
+
+    private LineChart mLineChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +98,10 @@ public class DetailedActivity extends AppCompatActivity {
         mFireControlPhoneTV = (TextView) findViewById(R.id.fire_control_phone_tv);
         mDescriptionTV = (TextView) findViewById(R.id.description_tv);
         mTimeTV = (TextView) findViewById(R.id.time_tv);
+        mDetailedInformationFAB = (FloatingActionButton) findViewById(R.id.detailed_information_fab);
 
+        //设置监听
+        mDetailedInformationFAB.setOnClickListener(this);
 
         //设置Toolbar的显示与隐藏及标题等
         ActionBar actionBar = getSupportActionBar();
@@ -102,36 +129,24 @@ public class DetailedActivity extends AppCompatActivity {
         mFireControl.setText("消防中心："+hydrant.getFire_control()+"");
         mFireControlPhoneTV.setText("消防中心电话："+hydrant.getPrincipal_phone()+"");
         mDescriptionTV.setText("备注："+hydrant.getDescription()+"");
-
+        mTimeTV.setText("更新时间："+hydrant.getTime()+"");
 
         /**
          * 水压曲线图绘制
          */
-
-        LineChart mLineChart = (LineChart) findViewById(R.id.lineChart);
-        //显示边界
-        mLineChart.setDrawBorders(true);
-        //设置数据
-        List<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            entries.add(new Entry(i, (float) (Math.random()) * 80));
-        }
-
-
-        XAxis xAxis = mLineChart.getXAxis();//得到X轴
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//设置X轴的位置, 值：BOTTOM,BOTH_SIDED,BOTTOM_INSIDE,TOP,TOP_INSIDE
-        xAxis.setGranularity(1f);//设置X轴间最小距离
-
-        //一个LineDataSet就是一条线
-        LineDataSet lineDataSet = new LineDataSet(entries, "温度");
-        LineData data = new LineData(lineDataSet);
-        mLineChart.setData(data);
-        //xAxis.setLabelCount(12, true);//设置X轴的刻度数量
+        mLineChart = (LineChart) findViewById(R.id.lineChart);
+        //NetWorkRequest.requestPressure(URL.PRESSURE_INFORMATION_JSON_URL,mLineChart);
+        requestPressure(URL.PRESSURE_INFORMATION_JSON_URL,mLineChart);
+        mLineChart.invalidate();
 
     }
 
 
-    //
+    /**
+     * 重写home键事件
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -142,4 +157,43 @@ public class DetailedActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * onClick事件
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.detailed_information_fab:
+                finish();
+                break;
+        }
+    }
+
+
+    /**
+     * 请求曲线数据信息并绘制
+     * @param address 请求url
+     * @param lineChart 绘制chart对象
+     */
+    private void requestPressure(final String address, final LineChart lineChart) {
+        HttpUtil.sendOkHttpRequest(address, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                DetailedActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(DetailedActivity.this,"未连接网络", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseText = response.body().string();
+                Utility.handlePressureResponse(responseText,lineChart);
+
+            }
+        });
+    }
 }

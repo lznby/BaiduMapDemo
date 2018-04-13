@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <!--防止Toolbar被RecyclerView挡掉-->
-        <android.support.design.widget.AppBarLayout
+<!--        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -25,7 +25,7 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:layout_scrollFlags="scroll|enterAlways|snap"/>
 
-        </android.support.design.widget.AppBarLayout>
+        </android.support.design.widget.AppBarLayout>-->
 
         <!-- 刷新控件,下拉刷新 -->
         <android.support.v4.widget.SwipeRefreshLayout
@@ -51,7 +51,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:src="@drawable/hydrant"
+            android:src="@drawable/map"
+            app:backgroundTint="@color/colorLightBlue"
             app:elevation="8dp"/>
 
         <!--</FrameLayout>-->

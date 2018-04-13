@@ -3,6 +3,7 @@ package com.lznby.baidumapdemo;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -21,13 +22,19 @@ import com.baidu.mapapi.model.LatLng;
 import com.lznby.baidumapdemo.entity.Hydrant;
 import com.lznby.baidumapdemo.entity.URL;
 import com.lznby.baidumapdemo.map.MapTools;
-import com.lznby.baidumapdemo.network.NetWorkRequest;
+import com.lznby.baidumapdemo.network.HttpUtil;
+import com.lznby.baidumapdemo.network.Utility;
 import com.lznby.baidumapdemo.util.Accessibility;
 import com.lznby.baidumapdemo.util.Tools;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.IOException;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -52,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Hydrant mHydrant;
 
     private Button mDetailedInformation;
-    private Button mListInformationBT;
+
+    private FloatingActionButton mMarkMapFAB;
 
 
     @Override
@@ -81,15 +89,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMarkPrincipalNameTV = (TextView) findViewById(R.id.mark_principal_name_tv);
         mMarkPrincicalPhoneTV = (TextView) findViewById(R.id.mark_principal_phone_tv);
         mDetailedInformation = (Button) findViewById(R.id.detailed_information_bt);
-        mListInformationBT = (Button) findViewById(R.id.list_information_bt);
+        mMarkMapFAB = (FloatingActionButton) findViewById(R.id.mark_map_fab);
 
         //Button添加点击事件
         mDetailedInformation.setOnClickListener(this);
-        mListInformationBT.setOnClickListener(this);
+        mMarkMapFAB.setOnClickListener(this);
 
 
         //JSON解析测试及绘制标记
-        NetWorkRequest.request(URL.HYDRANT_INFORMATION_JSON_URL,baiduMap);
+        //NetWorkRequest.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,baiduMap);
+        requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,baiduMap);
 
         //权限申请
         Accessibility.getPermission(MainActivity.this,MainActivity.this);
@@ -235,15 +244,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
             case R.id.detailed_information_bt:
-                //Toast.makeText(this,"进入详情界面"+Tools.estimateStatus(mHydrant.getStatus()), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this,DetailedActivity.class);
                 intent.putExtra("hydrant",mHydrant);
                 startActivity(intent);
                 break;
-            case R.id.list_information_bt:
+
+            case R.id.mark_map_fab:
                 Intent intentList = new Intent(MainActivity.this,ListCardActivity.class);
                 startActivity(intentList);
+                break;
         }
+    }
+
+
+
+    /**
+     * 请求标记信息及标记在地图上
+     * @param address 请求标记信息的url
+     * @param baiduMap 绘制标记的baiduMap对象
+     */
+    private void requestHydrantInformation(final String address, final BaiduMap baiduMap){
+        HttpUtil.sendOkHttpRequest(address, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this,"未连接网络", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseText = response.body().string();
+                Utility.handleHydrantResponse(responseText,baiduMap);
+            }
+        });
     }
 }
