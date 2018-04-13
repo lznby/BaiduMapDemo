@@ -2,14 +2,11 @@ package com.lznby.baidumapdemo.network;
 
 import android.text.TextUtils;
 
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.model.LatLng;
 import com.github.mikephil.charting.charts.LineChart;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lznby.baidumapdemo.entity.Hydrant;
 import com.lznby.baidumapdemo.entity.Pressure;
-import com.lznby.baidumapdemo.map.DrawMark;
 import com.lznby.baidumapdemo.util.DrawChart;
 
 import org.json.JSONArray;
@@ -22,10 +19,9 @@ public class Utility {
     /**
      * 通过get请求获取标记的基本信息
      * @param response
-     * @param baiduMap
      * @return
      */
-    public static boolean handleHydrantResponse(String response, BaiduMap baiduMap){
+    public static boolean handleHydrantResponse(String response){
         if(!TextUtils.isEmpty(response)){
             try {
                 //使用JSONObject方式解析JSON文件
@@ -58,8 +54,13 @@ public class Utility {
                         hydrant.save();
                     }
 
-                Gson gson = new Gson();
-                List<Hydrant> hydrantList = gson.fromJson(response,new TypeToken<List<Hydrant>>(){}.getType());
+
+
+
+/*                Gson gson = new Gson();
+                List<Hydrant> hydrantList = gson.fromJson(response,new TypeToken<List<Hydrant>>(){}.getType());*//*
+
+                List<Hydrant> hydrantList = DataSupport.findAll(Hydrant.class);
 
                 //转化为数组,并在地图上进行标识。
                 Hydrant[] hydrants  = new Hydrant[hydrantList.size()];
@@ -75,6 +76,7 @@ public class Utility {
                     //地图上绘制标记
                     DrawMark.drawMark(baiduMap,new LatLng(hydrants[i].getLatitude(),hydrants[i].getLongitude()),flag);
                 }
+*/
 
                 return true;
             } catch (Exception e) {

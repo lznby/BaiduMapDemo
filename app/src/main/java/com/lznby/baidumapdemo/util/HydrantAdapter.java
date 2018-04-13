@@ -69,7 +69,6 @@ public class HydrantAdapter extends RecyclerView.Adapter<HydrantAdapter.ViewHold
                 mContext.startActivity(intent);
             }
         });
-
         return holder;
     }
 

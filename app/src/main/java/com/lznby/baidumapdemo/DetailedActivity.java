@@ -135,9 +135,9 @@ public class DetailedActivity extends AppCompatActivity implements View.OnClickL
          * 水压曲线图绘制
          */
         mLineChart = (LineChart) findViewById(R.id.lineChart);
-        //NetWorkRequest.requestPressure(URL.PRESSURE_INFORMATION_JSON_URL,mLineChart);
         requestPressure(URL.PRESSURE_INFORMATION_JSON_URL,mLineChart);
         mLineChart.invalidate();
+
 
     }
 

@@ -1,9 +1,14 @@
 package com.lznby.baidumapdemo.map;
 
+import android.util.Log;
+
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.lznby.baidumapdemo.entity.Hydrant;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +63,32 @@ public class DrawMark {
         }
 
         baiduMap.addOverlay(option);
+    }
+
+    /**
+     * 在地图上绘制所有点
+     */
+    public static void drawAllMark(BaiduMap baiduMap) {
+
+        //从数据库中查询到所有点信息
+        List<Hydrant> hydrantList = DataSupport.findAll(Hydrant.class);
+
+        //转化为数组,并在地图上进行标识。
+        Hydrant[] hydrants  = new Hydrant[hydrantList.size()];
+        hydrantList.toArray(hydrants);
+        boolean flag = false;
+        for (int i=0; i<hydrants.length; i++) {
+            //判断状态
+            if (hydrants[i].getStatus() == 1 || hydrants[i].getStatus() == 2){
+                flag = true;
+            } else {
+                flag =false;
+            }
+            //地图上绘制标记
+            DrawMark.drawMark(baiduMap,new LatLng(hydrants[i].getLatitude(),hydrants[i].getLongitude()),flag);
+            Log.d("DrawAllMark", ""+hydrants[i].getAddress());
+        }
+
     }
 }
 

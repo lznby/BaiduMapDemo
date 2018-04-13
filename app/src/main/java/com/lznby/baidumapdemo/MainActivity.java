@@ -1,6 +1,7 @@
 package com.lznby.baidumapdemo;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,10 +22,12 @@ import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.model.LatLng;
 import com.lznby.baidumapdemo.entity.Hydrant;
 import com.lznby.baidumapdemo.entity.URL;
+import com.lznby.baidumapdemo.map.DrawMark;
 import com.lznby.baidumapdemo.map.MapTools;
 import com.lznby.baidumapdemo.network.HttpUtil;
 import com.lznby.baidumapdemo.network.Utility;
 import com.lznby.baidumapdemo.util.Accessibility;
+import com.lznby.baidumapdemo.util.NetworkChange;
 import com.lznby.baidumapdemo.util.Tools;
 
 import org.litepal.crud.DataSupport;
@@ -62,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FloatingActionButton mMarkMapFAB;
 
+    private NetworkChange networkChange;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +102,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //JSON解析测试及绘制标记
-        //NetWorkRequest.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,baiduMap);
-        requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,baiduMap);
+        requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL);
+        //绘制所有点
+        DrawMark.drawAllMark(baiduMap);
 
         //权限申请
         Accessibility.getPermission(MainActivity.this,MainActivity.this);
@@ -150,6 +156,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+
+        /**
+         * 监听网络状态
+         */
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        networkChange=new NetworkChange();
+        registerReceiver(networkChange,intentFilter);
     }
 
     /**
@@ -239,6 +253,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        //解除网络状态监听
+        unregisterReceiver(networkChange);
     }
 
     @Override
@@ -263,9 +279,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 请求标记信息及标记在地图上
      * @param address 请求标记信息的url
-     * @param baiduMap 绘制标记的baiduMap对象
      */
-    private void requestHydrantInformation(final String address, final BaiduMap baiduMap){
+    private void requestHydrantInformation(final String address){
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -280,8 +295,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
-                Utility.handleHydrantResponse(responseText,baiduMap);
+                Utility.handleHydrantResponse(responseText);
             }
         });
     }
+
 }
