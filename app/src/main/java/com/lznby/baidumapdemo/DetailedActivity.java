@@ -10,21 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.LineChart;
 import com.lznby.baidumapdemo.entity.Hydrant;
 import com.lznby.baidumapdemo.entity.URL;
-import com.lznby.baidumapdemo.network.HttpUtil;
-import com.lznby.baidumapdemo.network.Utility;
+import com.lznby.baidumapdemo.network.RequestInformation;
 import com.lznby.baidumapdemo.util.Tools;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 public class DetailedActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -135,8 +127,9 @@ public class DetailedActivity extends AppCompatActivity implements View.OnClickL
          * 水压曲线图绘制
          */
         mLineChart = (LineChart) findViewById(R.id.lineChart);
-        requestPressure(URL.PRESSURE_INFORMATION_JSON_URL,mLineChart);
-        mLineChart.invalidate();
+
+        //请求水压数据
+        RequestInformation.requestPressure(URL.PRESSURE_INFORMATION_JSON_URL,mLineChart,this);
 
 
     }
@@ -171,29 +164,9 @@ public class DetailedActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-    /**
-     * 请求曲线数据信息并绘制
-     * @param address 请求url
-     * @param lineChart 绘制chart对象
-     */
-    private void requestPressure(final String address, final LineChart lineChart) {
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                DetailedActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(DetailedActivity.this,"未连接网络", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseText = response.body().string();
-                Utility.handlePressureResponse(responseText,lineChart);
-
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

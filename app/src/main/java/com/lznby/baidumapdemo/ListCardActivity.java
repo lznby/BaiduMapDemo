@@ -6,25 +6,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.lznby.baidumapdemo.entity.Hydrant;
 import com.lznby.baidumapdemo.entity.URL;
-import com.lznby.baidumapdemo.network.HttpUtil;
-import com.lznby.baidumapdemo.network.Utility;
+import com.lznby.baidumapdemo.network.RequestInformation;
 import com.lznby.baidumapdemo.util.HydrantAdapter;
 
 import org.litepal.crud.DataSupport;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 /**
  * 清单形式显示
@@ -45,10 +37,7 @@ public class ListCardActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_card);
 
-        //以toolbar代替ActivityBar
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);*/
-        /*setSupportActionBar(toolbar);*/
-
+        //设置点击监听
         mCardListFAB = (FloatingActionButton) findViewById(R.id.card_list_fab);
         mCardListFAB.setOnClickListener(this);
 
@@ -75,9 +64,10 @@ public class ListCardActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-    //下拉刷新线程,未完成网络部分功能
+    //下拉刷新线程
     private void refreshHydrants(){
-        requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL);
+        //请求最新的Hydrant数据
+        RequestInformation.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,this);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -107,31 +97,8 @@ public class ListCardActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
-
-
-    /**
-     * 请求标记信息及标记在地图上
-     * @param address 请求标记信息的url
-     */
-    public void requestHydrantInformation(final String address){
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                ListCardActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(ListCardActivity.this,"未连接网络", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseText = response.body().string();
-                Utility.handleHydrantResponse(responseText);
-                Log.d("DrawAllMark", "呵呵！");
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

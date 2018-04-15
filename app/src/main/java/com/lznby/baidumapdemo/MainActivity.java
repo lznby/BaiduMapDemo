@@ -1,8 +1,6 @@
 package com.lznby.baidumapdemo;
 
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,34 +8,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.MapPoi;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.model.LatLng;
 import com.lznby.baidumapdemo.entity.Hydrant;
 import com.lznby.baidumapdemo.entity.URL;
 import com.lznby.baidumapdemo.map.DrawMark;
 import com.lznby.baidumapdemo.map.MapTools;
-import com.lznby.baidumapdemo.network.HttpUtil;
-import com.lznby.baidumapdemo.network.Utility;
+import com.lznby.baidumapdemo.network.RequestInformation;
 import com.lznby.baidumapdemo.util.Accessibility;
 import com.lznby.baidumapdemo.util.NetworkChange;
 import com.lznby.baidumapdemo.util.Tools;
 
 import org.litepal.crud.DataSupport;
 
-import java.io.IOException;
 import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -100,100 +87,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDetailedInformation.setOnClickListener(this);
         mMarkMapFAB.setOnClickListener(this);
 
-
-        //JSON解析测试及绘制标记
-        requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL);
-        //绘制所有点
-        DrawMark.drawAllMark(baiduMap);
+        //请求Hydrant信息并进行JSON解析
+        RequestInformation.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,this);
 
         //权限申请
         Accessibility.getPermission(MainActivity.this,MainActivity.this);
 
+        //地图加载完成监听事件,设置地图显示的范围及中心点,地图加载完成后添加Mark监听事件
+        MapTools.setOnMapLoadedCallback(baiduMap,onMarkerClickListener);
 
-        /**
-         * 地图加载完成监听事件,设置地图显示的范围及中心点,地图加载完成后添加Mark监听事件
-         */
-        baiduMap.setOnMapLoadedCallback(new BaiduMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-                //LatLng ll = new LatLng(29.86, 121.59);
-                LatLng ll = new LatLng(29.86, 121.59);
-                MapStatusUpdate update = MapStatusUpdateFactory.newLatLngZoom(ll, 12f);//设置缩放大小
-                baiduMap.animateMapStatus(update);
+        //地图单击事件
+        MapTools.setOnMapClickListener(baiduMap,this,mMarkShowRL);
 
-                //为自定义Mark添加监听
-                baiduMap.setOnMarkerClickListener(onMarkerClickListener);
-            }
-        });
-
-
-        /**
-         * 地图单击事件
-         */
-        baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
-
-            /**
-             * 地图单击事件回调函数
-             * @param latLng 点击的地理坐标
-             */
-            @Override
-            public void onMapClick(LatLng latLng) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mMarkShowRL.setVisibility(View.GONE);
-                    }
-                });
-            }
-
-            /**
-             * 地图内 Poi 单击事件回调函数
-             * @param mapPoi 点击的 poi 信息
-             */
-            @Override
-            public boolean onMapPoiClick(MapPoi mapPoi) {
-                return false;
-            }
-        });
-
-
-        /**
-         * 监听网络状态
-         */
-        IntentFilter intentFilter=new IntentFilter();
-        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        networkChange=new NetworkChange();
-        registerReceiver(networkChange,intentFilter);
+        //监听网络状态
+        NetworkChange.addNetworkChangeReciver(networkChange);
     }
 
-    /**
-     * 请求权限结果反馈，及错误提示
-     *
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
+
+    //请求权限结果反馈，及错误提示
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0) {
-                    for (int result : grantResults) {
-                        if (result != PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(this, "必须同意所有权限才能使用本程序", Toast.LENGTH_SHORT).show();
-                            finish();
-                            return;
-                        }
-                    }
-                    //权限请求成功事件
-                    /*requestLocation();*/
-                } else {
-                    Toast.makeText(this, "发生未知错误", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                break;
-            default:
-        }
+        //请求结果反馈
+        Accessibility.onRequestPermissionsResult(this,requestCode,permissions,grantResults);
     }
 
 
@@ -240,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        //绘制所有点,解决了安装程序后，第一次无法绘制mark标记
+        DrawMark.drawAllMark(baiduMap);
         mapView.onResume();
     }
 
@@ -258,6 +175,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
 
@@ -273,31 +195,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
-
-
-    /**
-     * 请求标记信息及标记在地图上
-     * @param address 请求标记信息的url
-     */
-    private void requestHydrantInformation(final String address){
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MainActivity.this,"未连接网络", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseText = response.body().string();
-                Utility.handleHydrantResponse(responseText);
-            }
-        });
-    }
-
 }

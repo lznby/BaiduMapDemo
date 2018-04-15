@@ -54,30 +54,6 @@ public class Utility {
                         hydrant.save();
                     }
 
-
-
-
-/*                Gson gson = new Gson();
-                List<Hydrant> hydrantList = gson.fromJson(response,new TypeToken<List<Hydrant>>(){}.getType());*//*
-
-                List<Hydrant> hydrantList = DataSupport.findAll(Hydrant.class);
-
-                //转化为数组,并在地图上进行标识。
-                Hydrant[] hydrants  = new Hydrant[hydrantList.size()];
-                hydrantList.toArray(hydrants);
-                boolean flag = false;
-                for (int i=0; i<hydrants.length; i++) {
-                    //判断状态
-                    if (hydrants[i].getStatus() == 1 || hydrants[i].getStatus() == 2){
-                        flag = true;
-                    } else {
-                        flag =false;
-                    }
-                    //地图上绘制标记
-                    DrawMark.drawMark(baiduMap,new LatLng(hydrants[i].getLatitude(),hydrants[i].getLongitude()),flag);
-                }
-*/
-
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -105,6 +81,10 @@ public class Utility {
 
                 //绘制曲线
                 DrawChart.drawChart(lineChart,pressures);
+
+                //刷新曲线信息
+                lineChart.invalidate();
+
                 return true;
 
             } catch (Exception e) {

@@ -3,6 +3,7 @@ package com.lznby.baidumapdemo.util;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
@@ -33,5 +34,16 @@ public class NetworkChange extends BroadcastReceiver {
             }
         }
 
+    }
+
+    /**
+     * 添加网络状态广播接收者
+     * @param networkChange
+     */
+    public static void addNetworkChangeReciver(NetworkChange networkChange) {
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        networkChange=new NetworkChange();
+        MyApplication.getContext().registerReceiver(networkChange,intentFilter);
     }
 }
