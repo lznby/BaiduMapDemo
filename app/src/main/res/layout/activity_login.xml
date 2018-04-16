@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/app_name"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"/>
+
+        <include layout="@layout/username_edit"/>
+        <include layout="@layout/password_edit"/>
+
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/sign_in_bt"
+                android:layout_marginLeft="10dp"
+                android:background="@null"
+                android:text="立即注册"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/forget_bt"
+                android:layout_marginRight="10dp"
+                android:background="@null"
+                android:text="重置密码"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/log_in_bt"
+            android:layout_width="300dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/logButtonGray"
+            android:text="手机登录"
+            android:textColor="@android:color/background_light"
+            android:textSize="18sp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="150dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

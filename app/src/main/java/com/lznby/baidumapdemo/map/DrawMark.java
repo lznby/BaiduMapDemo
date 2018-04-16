@@ -1,7 +1,5 @@
 package com.lznby.baidumapdemo.map;
 
-import android.util.Log;
-
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
@@ -86,7 +84,6 @@ public class DrawMark {
             }
             //地图上绘制标记
             DrawMark.drawMark(baiduMap,new LatLng(hydrants[i].getLatitude(),hydrants[i].getLongitude()),flag);
-            Log.d("DrawAllMark", ""+hydrants[i].getAddress());
         }
 
     }

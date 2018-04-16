@@ -13,11 +13,11 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <!--允许读取网络状态-->
+    <!-- 允许读取网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <!--允许读取wifi网络状态-->
+    <!-- 允许读取wifi网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <!--通知权限——震动权限-->
+    <!-- 通知权限——震动权限 -->
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
@@ -32,7 +32,7 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="zUzECg6ApxGkoHDlUWFmc5jGrxeng8Mm"/>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -64,6 +64,10 @@
         <activity android:name=".DetailedActivity">
         </activity>
         <activity android:name=".ListCardActivity">
+        </activity>
+        <activity android:name=".MainActivity">
+        </activity>
+        <activity android:name=".LoginActivity">
         </activity>
     </application>
 

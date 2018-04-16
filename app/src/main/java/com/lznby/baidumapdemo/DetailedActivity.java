@@ -129,7 +129,7 @@ public class DetailedActivity extends AppCompatActivity implements View.OnClickL
         mLineChart = (LineChart) findViewById(R.id.lineChart);
 
         //请求水压数据
-        RequestInformation.requestPressure(URL.PRESSURE_INFORMATION_JSON_URL,mLineChart,this);
+        RequestInformation.requestPressure(URL.PRESSURE_INFORMATION_JSON_URL,mLineChart,this,null,URL.GET);
 
 
     }

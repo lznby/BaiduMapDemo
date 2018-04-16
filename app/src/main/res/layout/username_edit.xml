@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_centerHorizontal="true"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/username_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="账号"
+                android:layout_marginRight="15dp"
+                android:textColor="@android:color/black"
+                android:textSize="17sp"/>
+
+            <EditText
+                android:id="@+id/username_et"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:textSize="15sp"
+                android:hint="输入手机号"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/username_tv"
+                android:background="@null"
+                android:inputType="phone"
+                android:maxLength="11"
+                android:maxLines="1"
+                android:textColor="@android:color/holo_blue_dark"/>
+
+            <ImageButton
+                android:id="@+id/username_delete"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/username_et"
+                android:visibility="invisible"
+                android:background="@drawable/falseicon"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+    <View
+        android:id="@+id/username_bl"
+        android:background="@drawable/gray_line"
+        android:layout_width="300dp"
+        android:layout_height="1dp"/>
+
+</LinearLayout>

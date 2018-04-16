@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMarkMapFAB.setOnClickListener(this);
 
         //请求Hydrant信息并进行JSON解析
-        RequestInformation.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,this);
+        RequestInformation.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,this,null,URL.GET);
 
         //权限申请
         Accessibility.getPermission(MainActivity.this,MainActivity.this);

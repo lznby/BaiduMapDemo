@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.lznby.baidumapdemo.entity.Hydrant;
@@ -55,11 +56,15 @@ public class ListCardActivity extends AppCompatActivity implements View.OnClickL
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
                 //网上申请最新数据
-                //mHydrantList.clear();
+                mHydrantList.clear();
+                RequestInformation.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,ListCardActivity.this,null,URL.GET);
+                initHydrant();//重新初始化Adapter中的信息
                 refreshHydrants();
             }
         });
+
 
     }
 
@@ -67,13 +72,15 @@ public class ListCardActivity extends AppCompatActivity implements View.OnClickL
     //下拉刷新线程
     private void refreshHydrants(){
         //请求最新的Hydrant数据
-        RequestInformation.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,this);
+/*        RequestInformation.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,this);
+        initHydrant();//重新初始化Adapter中的信息*/
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                initHydrant();//重新初始化Adapter中的信息
                 adapter.notifyDataSetChanged();
+                Log.d("DrawAllMark", "run: ui");
                 swipeRefresh.setRefreshing(false);//刷新事件结束隐藏刷新进度条
+
             }
         });
 
@@ -85,7 +92,7 @@ public class ListCardActivity extends AppCompatActivity implements View.OnClickL
     private void initHydrant(){
         List<Hydrant> hydrants = DataSupport.findAll(Hydrant.class);
         mHydrantList = hydrants;
-
+        Log.d("DrawAllMark", "sql: ui");
     }
 
     @Override
