@@ -8,11 +8,7 @@ import org.litepal.LitePal;
 import cn.jpush.android.api.JPushInterface;
 
 /**
- * @author Admin
- * @version $Rev$
- * @des ${TODO}
- * @updateAuthor $Author$
- * @updateDes ${TODO}
+ * 初始化器
  */
 public class MyApplication extends Application {
 
