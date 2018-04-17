@@ -65,7 +65,6 @@ public class RequestInformation {
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
                 Utility.handlePressureResponse(responseText,lineChart);
-
             }
         },requestBody, flog);
     }
@@ -88,6 +87,7 @@ public class RequestInformation {
                         Toast.makeText(activity,"网络请求失败！", Toast.LENGTH_SHORT).show();
                     }
                 });
+
             }
 
             @Override
@@ -97,4 +97,5 @@ public class RequestInformation {
             }
         }, requestBody, flog);
     }
+
 }

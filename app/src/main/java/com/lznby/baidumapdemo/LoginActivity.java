@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.lznby.baidumapdemo.entity.RequestType;
 import com.lznby.baidumapdemo.entity.URL;
 import com.lznby.baidumapdemo.network.RequestInformation;
 import com.lznby.baidumapdemo.util.CheckLoginInformation;
@@ -151,7 +152,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnTouchList
                         .add("name",mUsernameEdit.getText().toString())
                         .add("password",mPasswordEdit.getText().toString())
                         .build();
-                RequestInformation.requestLogin(URL.LOGIN_INFORMATION_JSON_URL,this,requestBody,URL.POST);
+                RequestInformation.requestLogin(URL.LOGIN_INFORMATION_JSON_URL,this,requestBody, RequestType.POST);
                 break;
             case R.id.sign_in_bt:
 /*                Intent intent = new Intent(this,SignInActivity.class);

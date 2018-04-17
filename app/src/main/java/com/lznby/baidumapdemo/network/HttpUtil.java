@@ -16,7 +16,6 @@ public class HttpUtil {
         } else {
             request = new Request.Builder().url(address).build();
         }
-
         client.newCall(request).enqueue(callback);
     }
 }

@@ -1,10 +1,7 @@
 package com.lznby.baidumapdemo.network;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -22,25 +19,26 @@ public class HttpUtilsHttpURLConnection {
      * parms：提交数据
      * return:网页源码
      */
-    public static  String getContextByHttp(String urlStr,Map<String,String> parms){
+    public static  String getContextByHttp(String urlStr){
         StringBuilder sb = new StringBuilder();
         try{
             URL url = new URL(urlStr);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-            connection.setRequestMethod("POST");
+            connection.setRequestMethod("GET");
+            /*connection.setRequestMethod("POST");*/
             connection.setReadTimeout(5000);
             connection.setConnectTimeout(5000);
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setInstanceFollowRedirects(true);
 
-            OutputStream outputStream = connection.getOutputStream();
+/*            OutputStream outputStream = connection.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
             writer.write(getStringFromOutput(parms));
 
             writer.flush();
             writer.close();
-            outputStream.close();
+            outputStream.close();*/
 
             if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.LineChart;
 import com.lznby.baidumapdemo.entity.Hydrant;
+import com.lznby.baidumapdemo.entity.RequestType;
 import com.lznby.baidumapdemo.entity.URL;
 import com.lznby.baidumapdemo.network.RequestInformation;
 import com.lznby.baidumapdemo.util.Tools;
@@ -129,7 +130,7 @@ public class DetailedActivity extends AppCompatActivity implements View.OnClickL
         mLineChart = (LineChart) findViewById(R.id.lineChart);
 
         //请求水压数据
-        RequestInformation.requestPressure(URL.PRESSURE_INFORMATION_JSON_URL,mLineChart,this,null,URL.GET);
+        RequestInformation.requestPressure(URL.PRESSURE_INFORMATION_JSON_URL,mLineChart,this,null, RequestType.GET);
 
 
     }

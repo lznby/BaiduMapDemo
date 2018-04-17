@@ -14,6 +14,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.lznby.baidumapdemo.entity.Hydrant;
+import com.lznby.baidumapdemo.entity.RequestType;
 import com.lznby.baidumapdemo.entity.URL;
 import com.lznby.baidumapdemo.map.DrawMark;
 import com.lznby.baidumapdemo.map.MapTools;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMarkMapFAB.setOnClickListener(this);
 
         //请求Hydrant信息并进行JSON解析
-        RequestInformation.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,this,null,URL.GET);
+        RequestInformation.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,this,null, RequestType.GET);
 
         //权限申请
         Accessibility.getPermission(MainActivity.this,MainActivity.this);
@@ -156,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         //绘制所有点,解决了安装程序后，第一次无法绘制mark标记
+        baiduMap.clear();
         DrawMark.drawAllMark(baiduMap);
         mapView.onResume();
     }
