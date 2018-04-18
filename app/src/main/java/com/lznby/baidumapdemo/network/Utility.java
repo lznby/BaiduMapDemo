@@ -3,7 +3,6 @@ package com.lznby.baidumapdemo.network;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -58,7 +57,6 @@ public class Utility {
                     hydrant.setTime(jsonObject.getString("time"));
                     hydrant.save();
                 }
-                Log.d("DrawAllMark", "http: ui");
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();

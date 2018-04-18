@@ -20,6 +20,8 @@
     <!-- 通知权限——震动权限 -->
     <uses-permission android:name="android.permission.VIBRATE"/>
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:name=".util.MyApplication"
         android:allowBackup="true"
@@ -69,6 +71,13 @@
         </activity>
         <activity android:name=".LoginActivity">
         </activity>
+
+        <!-- 警报服务 -->
+        <service android:name=".util.MusicService">
+            <intent-filter>
+                <action android:name="MY.MUSIC.SERVICE"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

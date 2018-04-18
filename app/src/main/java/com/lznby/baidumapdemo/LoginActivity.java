@@ -17,6 +17,7 @@ import com.lznby.baidumapdemo.entity.RequestType;
 import com.lznby.baidumapdemo.entity.URL;
 import com.lznby.baidumapdemo.network.RequestInformation;
 import com.lznby.baidumapdemo.util.CheckLoginInformation;
+import com.lznby.baidumapdemo.util.LoginInformation;
 
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
@@ -73,7 +74,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnTouchList
         //设置ChangedListener事件
         mUsernameEdit.addTextChangedListener(watcherTel);
         mPasswordEdit.addTextChangedListener(watcherPwd);
-
+        //设置上次登录信息
+        mUsernameEdit.setText(LoginInformation.getUsername());
+        mPasswordEdit.setText(LoginInformation.getPassword());
     }
 
     /**
@@ -146,8 +149,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnTouchList
                 } else {
                     Toast.makeText(this,"用户名或密码错误！", Toast.LENGTH_SHORT).show();
                 }*/
-
+                //存储登录信息
+                LoginInformation.saveInformation(mUsernameEdit.getText().toString(),mPasswordEdit.getText().toString());
                 //post请求登录
+
                 RequestBody requestBody = new FormBody.Builder()
                         .add("name",mUsernameEdit.getText().toString())
                         .add("password",mPasswordEdit.getText().toString())

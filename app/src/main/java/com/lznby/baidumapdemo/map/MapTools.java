@@ -10,6 +10,7 @@ import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.model.LatLng;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
  * 修改默认百度地图的View
@@ -22,7 +23,8 @@ public class MapTools {
      */
     public static void changeDefaultBaiduMapView(MapView mapView) {
         //设置隐藏缩放和扩大的百度地图的默认的比例按钮
-        mapView.showZoomControls(false);
+        mapView.showZoomControls(false
+        );
         mapView.showScaleControl(false);
         mapView.removeViewAt(1);//最后移除默认百度地图的logo View
     }
@@ -55,7 +57,7 @@ public class MapTools {
      * @param activity 当前activity
      * @param mMarkShowRL 设置ui变化的RelativeLayout
      */
-    public static void setOnMapClickListener (BaiduMap baiduMap, final Activity activity, final RelativeLayout mMarkShowRL) {
+    public static void setOnMapClickListener (BaiduMap baiduMap, final Activity activity, final RelativeLayout mMarkShowRL, final SlidingUpPanelLayout mSlidingUpPanelLayout) {
         baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
 
             /**
@@ -68,6 +70,7 @@ public class MapTools {
                     @Override
                     public void run() {
                         mMarkShowRL.setVisibility(View.GONE);
+                        mSlidingUpPanelLayout.setPanelHeight(0);
                     }
                 });
             }

@@ -74,7 +74,7 @@ public class ListCardActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onRefresh() {
                 //网上申请最新数据
-                RequestInformation.requestHydrantInformation2(URL.HYDRANT_INFORMATION_JSON_URL,ListCardActivity.this,null, RequestType.GET);
+                RequestInformation.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,ListCardActivity.this,null, RequestType.GET);
             }
         });
 
@@ -82,7 +82,7 @@ public class ListCardActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(ListCardActivity.this,DetailedActivity.class);
-                intent.putExtra("hydrant",mHydrantList.remove(position));
+                intent.putExtra("hydrant",mHydrantList.get(position));
                 startActivity(intent);
             }
         });

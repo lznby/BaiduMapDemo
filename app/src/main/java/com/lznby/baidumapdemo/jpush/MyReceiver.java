@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.lznby.baidumapdemo.MainActivity;
 import com.lznby.baidumapdemo.R;
+import com.lznby.baidumapdemo.util.MusicService;
 import com.lznby.baidumapdemo.util.MyApplication;
 
 import org.json.JSONException;
@@ -38,13 +39,15 @@ public class MyReceiver extends BroadcastReceiver {
     // 应用程序可以把此 RegistrationID 保存以自己的应用服务器上，
     // 然后就可以根据 RegistrationID 来向设备推送消息或者通知。
     public static String regId;
-
+    public Intent intent1 = new Intent(MyApplication.getContext(), MusicService.class);
     @Override
     public void onReceive(Context context, Intent intent) {
 
         try {
-
             Bundle bundle = intent.getExtras();
+
+
+
             Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
 
             if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
@@ -52,8 +55,13 @@ public class MyReceiver extends BroadcastReceiver {
                 Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
                 //send the Registration Id to your server...
 
+
             } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
+
+                //启动报警服务
+                /*Intent intent1 = new Intent(MyApplication.getContext(), MusicService.class);*/
+                context.startService(intent1);
 
 
                 Intent intent2 = new Intent(MyApplication.getContext(),MainActivity.class);
@@ -76,26 +84,42 @@ public class MyReceiver extends BroadcastReceiver {
                         .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.drawable.hydrant)))//通知中显示大图片
                         .setLargeIcon(BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.mipmap.ic_launcher)).build();//设置通知大图标
                 //启动通知
+
+
                 manager.notify(1,notification);
 
 
 
 
 
-                // 对应极光后台的 - 自定义消息  默认不会出现在notification上 所以一般都选用发送通知
+                // 对应极光后台的 - 自定义消息  默认不会出现在notification上 所以一般都选用发送通知 极光推送自带最基本的Notification 逻辑处理
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
-                int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
-                Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
+                int notificationId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
+                Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notificationId);
+
+
+                //启动警报服务
+                context.startService(intent1);
+
 
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
 
-                //打开自定义的Activity
+
+                //关闭报警
+                if (MusicService.mediaPlayer.isPlaying() && !MusicService.mediaPlayer.equals(null)) {
+                    MusicService.mediaPlayer.stop();
+                    MusicService.mediaPlayer.prepare();
+                }
+
+
+
+/*                //打开自定义的Activity
                 Intent i = new Intent(context,MainActivity.class);
                 i.putExtras(bundle);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(i);
+                context.startActivity(i);*/
 
             } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));

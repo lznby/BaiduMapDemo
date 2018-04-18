@@ -1,7 +1,6 @@
 package com.lznby.baidumapdemo.network;
 
 import android.app.Activity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -44,6 +43,7 @@ public class RequestInformation {
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
                 Utility.handleHydrantResponse(responseText);
+                EventBus.getDefault().post(new MessageEvent(DataSupport.findAll(Hydrant.class)));//eventBus设置缺省值
             }
         }, requestBody, flog);
     }
@@ -104,37 +104,5 @@ public class RequestInformation {
         }, requestBody, flog);
     }
 
-
-
-
-
-
-
-
-    /**
-     * 请求标记信息及标记在地图上
-     * @param address 请求标记信息的url
-     * @param activity 当前activity
-     */
-    public static void requestHydrantInformation2(final String address, final Activity activity, RequestBody requestBody, String flog){
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(activity,"网络请求失败！", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseText = response.body().string();
-                Utility.handleHydrantResponse(responseText);
-                EventBus.getDefault().post(new MessageEvent(DataSupport.findAll(Hydrant.class)));
-            }
-        }, requestBody, flog);
-    }
 
 }

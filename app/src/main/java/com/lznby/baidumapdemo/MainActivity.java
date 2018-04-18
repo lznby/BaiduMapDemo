@@ -22,6 +22,7 @@ import com.lznby.baidumapdemo.network.RequestInformation;
 import com.lznby.baidumapdemo.util.Accessibility;
 import com.lznby.baidumapdemo.util.NetworkChange;
 import com.lznby.baidumapdemo.util.Tools;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.litepal.crud.DataSupport;
 
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private NetworkChange networkChange;
 
+    private SlidingUpPanelLayout mSlidingUpPanelLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //
         SDKInitializer.initialize(getApplicationContext());
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
 
         //百度地图控件
         mapView = (MapView) findViewById(R.id.bmapView);
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMarkPrincicalPhoneTV = (TextView) findViewById(R.id.mark_principal_phone_tv);
         mDetailedInformation = (Button) findViewById(R.id.detailed_information_bt);
         mMarkMapFAB = (FloatingActionButton) findViewById(R.id.mark_map_fab);
+        mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
 
         //Button添加点击事件
         mDetailedInformation.setOnClickListener(this);
@@ -98,10 +102,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MapTools.setOnMapLoadedCallback(baiduMap,onMarkerClickListener);
 
         //地图单击事件
-        MapTools.setOnMapClickListener(baiduMap,this,mMarkShowRL);
+        MapTools.setOnMapClickListener(baiduMap,this,mMarkShowRL,mSlidingUpPanelLayout);
 
         //监听网络状态
-        NetworkChange.addNetworkChangeReciver(networkChange);
+        //NetworkChange.addNetworkChangeReciver(networkChange);
     }
 
 
@@ -138,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     public void getPoint(double longitude, double latitude){
         final List<Hydrant> hydrantList = DataSupport.where("longitude like ? and latitude like ?", longitude+"",latitude+"").find(Hydrant.class);
-        final Hydrant hydrant = hydrantList.remove(0);
+        final Hydrant hydrant = hydrantList.get(0);
         mHydrant = hydrant;
         runOnUiThread(new Runnable() {
             @Override
@@ -149,6 +153,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mMarkTimeTV.setText(mHydrant.getTime());
                 mMarkPrincipalNameTV.setText(mHydrant.getPrincipal_name());
                 mMarkPrincicalPhoneTV.setText(mHydrant.getPrincipal_phone());
+                //设置上划块高度
+                mSlidingUpPanelLayout.setPanelHeight(400);
             }
         });
     }
@@ -173,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         mapView.onDestroy();
         //解除网络状态监听
-        unregisterReceiver(networkChange);
+//        unregisterReceiver(networkChange);
     }
 
     @Override
