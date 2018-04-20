@@ -2,12 +2,12 @@ package com.lznby.baidumapdemo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lznby.baidumapdemo.entity.Hydrant;
@@ -38,8 +38,9 @@ public class ListCardActivity extends AppCompatActivity implements View.OnClickL
 
     //下拉刷新控件
     private SwipeRefreshLayout swipeRefresh;
-    private FloatingActionButton mCardListFAB;
     private RecyclerView mRecyclerView;
+    private Button mDisplayMap;
+    private Button mDisplayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +52,13 @@ public class ListCardActivity extends AppCompatActivity implements View.OnClickL
 
 
         //设置点击监听
-        mCardListFAB = (FloatingActionButton) findViewById(R.id.card_list_fab);
-        mCardListFAB.setOnClickListener(this);
+        mDisplayMap = (Button) findViewById(R.id.display_format_map);
+        mDisplayList = (Button) findViewById(R.id.display_format_list);
+        mDisplayMap.setOnClickListener(this);
+
+        //设置切换模式按钮颜色
+        mDisplayMap.setBackgroundResource(R.color.colorLightBlue);
+        mDisplayList.setBackgroundResource(R.color.logButtonGray);
 
         //Hydrant信息刷新
         initHydrant();
@@ -100,7 +106,7 @@ public class ListCardActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.card_list_fab:
+            case R.id.display_format_map:
                 finish();
                 break;
         }

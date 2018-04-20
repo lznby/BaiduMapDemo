@@ -1,8 +1,6 @@
 package com.lznby.baidumapdemo.map;
 
 import android.app.Activity;
-import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapPoi;
@@ -55,9 +53,8 @@ public class MapTools {
      * 地图单击事件
      * @param baiduMap 设置回调的BaiduMap对象
      * @param activity 当前activity
-     * @param mMarkShowRL 设置ui变化的RelativeLayout
      */
-    public static void setOnMapClickListener (BaiduMap baiduMap, final Activity activity, final RelativeLayout mMarkShowRL, final SlidingUpPanelLayout mSlidingUpPanelLayout) {
+    public static void setOnMapClickListener (BaiduMap baiduMap, final Activity activity, final SlidingUpPanelLayout mSlidingUpPanelLayout) {
         baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
 
             /**
@@ -69,7 +66,6 @@ public class MapTools {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mMarkShowRL.setVisibility(View.GONE);
                         mSlidingUpPanelLayout.setPanelHeight(0);
                     }
                 });

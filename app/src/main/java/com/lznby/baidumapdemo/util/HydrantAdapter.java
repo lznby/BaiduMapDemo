@@ -1,5 +1,7 @@
 package com.lznby.baidumapdemo.util;
 
+import android.graphics.Color;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lznby.baidumapdemo.R;
@@ -21,5 +23,10 @@ public class HydrantAdapter extends BaseQuickAdapter<Hydrant,BaseViewHolder>{
                 .setText(R.id.card_princical_name,"负责人姓名："+item.getPrincipal_name())
                 .setText(R.id.card_princical_phone,"负责人电话："+item.getPrincipal_phone())
                 .setText(R.id.card_address,"地址："+item.getAddress());
+        if (item.getStatus() == 1) {
+            helper.setTextColor(R.id.card_status_tv, Color.RED);
+        } else if (item.getStatus() == 2) {
+            helper.setTextColor(R.id.card_status_tv, Color.YELLOW);
+        }
     }
 }

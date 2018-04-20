@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/display_format_map"
+            android:layout_width="70dp"
+            android:layout_height="25dp"
+            android:background="@color/logButtonGray"
+            android:textColor="@color/fontWhite"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:text="地图"/>
+
+        <Button
+            android:id="@+id/display_format_list"
+            android:layout_width="70dp"
+            android:layout_height="25dp"
+            android:background="@color/colorLightBlue"
+            android:textColor="@color/fontWhite"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:text="列表"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

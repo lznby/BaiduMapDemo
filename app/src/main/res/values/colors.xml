@@ -7,4 +7,8 @@
     <color name="logButtonLightBlue">#33b5e5</color>
     <color name="logButtonGray">#AAAAAA</color>
     <color name="logButtonDarkBlue">#3E869F</color>
+    <color name="fontWhite">#FFFFFF</color>
+    <color name="fontRed">#FF0000</color>
+    <color name="fontBlack">#000000</color>
+    <color name="backgroundGray">#ECECEC</color>
 </resources>
