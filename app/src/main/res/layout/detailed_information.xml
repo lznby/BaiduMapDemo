@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--begin-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@color/backgroundGray"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- 概要信息 -->
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="0dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/main_hydrant_id"
+                        android:text="消防栓编号：1"
+                        android:layout_alignParentLeft="true"
+                        android:textColor="@color/fontBlack"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/main_cancel_alarm"
+                        android:text="解除报警"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_alignParentRight="true"
+                        android:textColor="@color/fontWhite"
+                        android:background="@color/fontRed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"/>
+
+                    <TextView
+                        android:id="@+id/main_pressure"
+                        android:text="水压：0.27 | "
+                        android:textColor="@color/fontBlack"
+                        android:layout_below="@+id/main_hydrant_id"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/main_status"
+                        android:text="偏低"
+                        android:textColor="@color/fontBlack"
+                        android:layout_below="@+id/main_hydrant_id"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_toRightOf="@+id/main_pressure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_height="1dp"
+                    android:background="@color/backgroundGray"/>
+
+                <TextView
+                    android:text="--查看详情--"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/fontBlack"
+                    android:textSize="14sp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- 位置信息 -->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardCornerRadius="0dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="位置"
+                        android:textSize="16sp"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/fontBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <View
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/backgroundGray"/>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:src="@drawable/mark_green"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"/>
+
+                        <TextView
+                            android:id="@+id/main_address"
+                            android:text="浙江万里学院"
+                            android:textSize="15sp"
+                            android:textColor="@color/fontBlack"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/main_longitude_latitude"
+                        android:textColor="@color/fontBlack"
+                        android:text="经度：121.533193 | 纬度：29.830222"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/main_area_node_id"
+                        android:text="区域号：3 | 节点号：28"
+                        android:textColor="@color/fontBlack"
+                        android:layout_margin="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- 负责人信息 -->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardCornerRadius="0dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="负责人"
+                        android:textSize="16sp"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/fontBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <View
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/backgroundGray"/>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp">
+
+                        <TextView
+                            android:id="@+id/main_principal_name"
+                            android:textColor="@color/fontBlack"
+                            android:text="姓名：张三"
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"/>
+
+                        <ImageView
+                            android:src="@drawable/phone"
+                            android:layout_marginLeft="50dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"/>
+
+                        <Button
+                            android:text="13750881234"
+                            android:id="@+id/main_principal_phone"
+                            android:textColor="@color/colorLightBlue"
+                            android:background="@null"
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+            <!-- 其他信息 -->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardCornerRadius="0dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="其他信息"
+                        android:textSize="16sp"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/fontBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <View
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/backgroundGray"/>
+
+                    <TextView
+                        android:id="@+id/main_fire_control"
+                        android:text="消防中心：宁波鄞州区消防中心"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/fontBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp">
+
+                        <TextView
+                            android:textColor="@color/fontBlack"
+                            android:text="消防中心电话："
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"/>
+
+                        <ImageView
+                            android:src="@drawable/phone"
+                            android:layout_marginLeft="10dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"/>
+
+                        <Button
+                            android:text="632626123"
+                            android:id="@+id/main_fire_control_phone"
+                            android:textColor="@color/colorLightBlue"
+                            android:background="@null"
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/main_checkpoint_type"
+                        android:text="监测点类型：消防栓水压监测"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/fontBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp">
+
+                        <TextView
+                            android:textColor="@color/fontBlack"
+                            android:text="检测点电话："
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"/>
+
+                        <ImageView
+                            android:src="@drawable/phone"
+                            android:layout_marginLeft="10dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"/>
+
+                        <Button
+                            android:text="632626696"
+                            android:id="@+id/main_checkpoint_phone"
+                            android:textColor="@color/colorLightBlue"
+                            android:background="@null"
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- 备注信息 -->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardCornerRadius="0dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="备注"
+                        android:textSize="16sp"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/fontBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <View
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/backgroundGray"/>
+
+                    <TextView
+                        android:id="@+id/main_description"
+                        android:text="是丢恢复速度接哈开房间哈里斯多发环节可能就会快乐sad嫁汉嫁汉李开复
+                                    发送进口奶粉迪斯科解放看见了三大发生口角联发科技拉萨进口奶粉进口量大
+                                    发射计划史蒂芬霍金阿萨德就会哭拉升到今年开发商急坏了环境来看"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/fontBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- 更新时间 -->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:cardCornerRadius="0dp">
+
+                <TextView
+                    android:id="@+id/main_time"
+                    android:layout_margin="10dp"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/fontBlack"
+                    android:text="更新时间:2016-04-28 15:36:04"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--end-->
+
+</LinearLayout>

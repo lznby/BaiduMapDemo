@@ -4,14 +4,21 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.lznby.baidumapdemo.entity.Hydrant;
 import com.lznby.baidumapdemo.entity.RequestType;
 import com.lznby.baidumapdemo.entity.URL;
@@ -73,6 +80,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TextView mMainTimeTV;
 
+    private CardView mMainPanelCV;
+
+    private ImageView mMainHydrantImageIMG;
+
+    private LinearLayout mMainRL;
+
+    private int imageWidth = 0;
+
+    private int imageHeight = 0;
+
+    private int top = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +129,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMainCheckpointPhoneBT = (Button) findViewById(R.id.main_checkpoint_phone);
         mMainDescriptionTV = (TextView) findViewById(R.id.main_description);
         mMainTimeTV = (TextView) findViewById(R.id.main_time);
+        mMainPanelCV = (CardView) findViewById(R.id.main_panel_cardView);
+        mMainHydrantImageIMG = (ImageView) findViewById(R.id.main_hydrant_image_img);
+        mMainRL = (LinearLayout) findViewById(R.id.main_ll);
 
         //Button添加点击事件
         mDisplayList.setOnClickListener(this);
@@ -118,6 +139,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMainPrincipalPhoneBT.setOnClickListener(this);
         mMainFireControlPhoneBT.setOnClickListener(this);
         mMainCheckpointPhoneBT.setOnClickListener(this);
+
+        //设置SlidingUpPanelLayout滑动及点击事件适用View
+        mSlidingUpPanelLayout.setDragView(mMainPanelCV);
+
+        mSlidingUpPanelLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+/*                int x = 0;
+                int y = 0;
+                if (x == 0) {
+                    Log.d("GETXY", "event.getX():" + event.getX());
+                    Log.d("GETXY", "event.getRawX():" + event.getRawX());
+                    x++;
+                }
+                if (y == 0) {
+                    Log.d("GETXY", "event.getY():" + event.getY());
+                    Log.d("GETXY", "event.getRawY():" + event.getRawY());
+                    y++;
+                }*/
+
+                if (event.getY() <= 1400) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMainHydrantImageIMG.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+                } if (event.getY() >1400) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMainHydrantImageIMG.setVisibility(View.GONE);
+                        }
+                    });
+                }
+
+                Log.d("GETXY", "ViewTop: " + mMainRL.getTop());
+
+
+                Log.d("GETXY", "WindowsWidth: " + Tools.getScreenSize(MainActivity.this)[0]);
+                Log.d("GETXY", "WindowsHeight: " + Tools.getScreenSize(MainActivity.this)[1]);
+                return false;
+            }
+        });
 
         //请求Hydrant信息并进行JSON解析
         RequestInformation.requestHydrantInformation(URL.HYDRANT_INFORMATION_JSON_URL,this,null, RequestType.GET);
@@ -133,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //监听网络状态
         NetworkChange.addNetworkChangeReciver(networkChange);
+
     }
 
 
@@ -180,6 +247,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mMainHydrantIdTV.setText("消防栓编号:" + mHydrant.getHydrant_id());
                 mMainPressureTV.setText("水压:"+mHydrant.getPressure() + " | ");
                 mMainStatusTV.setText(Tools.estimateStatus(mHydrant.getStatus()));
+
+                //显示图片
+                Glide.with(MainActivity.this).load(mHydrant.getImg_url()).into(mMainHydrantImageIMG).getSize(new SizeReadyCallback() {
+                    @Override
+                    public void onSizeReady(int width, int height) {
+                        //获取加载后图片大小
+                        imageWidth = width;
+                        imageHeight = height;
+                    }
+                });
+
+
+
+
                 if (mHydrant.getStatus() != 0) {
                     mMainStatusTV.setTextColor(Color.RED);
                 } else {

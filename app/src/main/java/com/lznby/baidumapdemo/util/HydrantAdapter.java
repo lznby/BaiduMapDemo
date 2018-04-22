@@ -1,7 +1,9 @@
 package com.lznby.baidumapdemo.util;
 
 import android.graphics.Color;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lznby.baidumapdemo.R;
@@ -16,13 +18,22 @@ public class HydrantAdapter extends BaseQuickAdapter<Hydrant,BaseViewHolder>{
         super(layoutResId);
     }
 
+
+
     @Override
     protected void convert(BaseViewHolder helper, Hydrant item) {
+
+
+
         helper.setText(R.id.card_hydrant_id_tv,"消防栓编号："+item.getHydrant_id()+"")
                 .setText(R.id.card_status_tv,"水压状态："+Tools.estimateStatus(item.getStatus()))
                 .setText(R.id.card_princical_name,"负责人姓名："+item.getPrincipal_name())
                 .setText(R.id.card_princical_phone,"负责人电话："+item.getPrincipal_phone())
                 .setText(R.id.card_address,"地址："+item.getAddress());
+
+        ImageView hydrantImage = helper.getView(R.id.card_image_img);
+        Glide.with(mContext).load(item.getImg_url()).centerCrop().into(hydrantImage);
+
         if (item.getStatus() == 1) {
             helper.setTextColor(R.id.card_status_tv, Color.RED);
         } else if (item.getStatus() == 2) {

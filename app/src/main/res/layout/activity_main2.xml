@@ -34,16 +34,25 @@
 
     </RelativeLayout>
 
-
+    <!-- Panel -->
 
     <LinearLayout
+        android:id="@+id/main_ll"
         android:orientation="vertical"
         android:background="@color/backgroundGray"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/main_hydrant_image_img"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
 
         <!-- 概要信息 -->
         <android.support.v7.widget.CardView
+            android:id="@+id/main_panel_cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="0dp">
@@ -127,7 +136,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -399,8 +409,8 @@
                         <TextView
                             android:id="@+id/main_description"
                             android:text="是丢恢复速度接哈开房间哈里斯多发环节可能就会快乐sad嫁汉嫁汉李开复
-                                    发送进口奶粉迪斯科解放看见了三大发生口角联发科技拉萨进口奶粉进口量大
-                                    发射计划史蒂芬霍金阿萨德就会哭拉升到今年开发商急坏了环境来看"
+                                发送进口奶粉迪斯科解放看见了三大发生口角联发科技拉萨进口奶粉进口量大
+                                发射计划史蒂芬霍金阿萨德就会哭拉升到今年开发商急坏了环境来看"
                             android:layout_margin="10dp"
                             android:textColor="@color/fontBlack"
                             android:layout_width="wrap_content"
@@ -432,9 +442,9 @@
 
         </ScrollView>
 
-
-
     </LinearLayout>
+
+
 
 
 
