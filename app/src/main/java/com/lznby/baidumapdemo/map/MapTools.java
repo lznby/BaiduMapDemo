@@ -53,6 +53,7 @@ public class MapTools {
      * 地图单击事件
      * @param baiduMap 设置回调的BaiduMap对象
      * @param activity 当前activity
+     * @param mSlidingUpPanelLayout 设置SlidingUpPanelLayout隐藏
      */
     public static void setOnMapClickListener (BaiduMap baiduMap, final Activity activity, final SlidingUpPanelLayout mSlidingUpPanelLayout) {
         baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
@@ -66,6 +67,7 @@ public class MapTools {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //隐藏SlidingUpPanelLayout
                         mSlidingUpPanelLayout.setPanelHeight(0);
                     }
                 });

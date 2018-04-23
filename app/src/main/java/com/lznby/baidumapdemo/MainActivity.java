@@ -5,12 +5,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -84,13 +84,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private ImageView mMainHydrantImageIMG;
 
-    private LinearLayout mMainRL;
+    private LinearLayout mMainLL;
 
-    private int imageWidth = 0;
+    private int imageHeight;
 
-    private int imageHeight = 0;
+    private int top[] = {0,0,0,0};
 
-    private int top = 0;
+    private RelativeLayout mMainRL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +131,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMainTimeTV = (TextView) findViewById(R.id.main_time);
         mMainPanelCV = (CardView) findViewById(R.id.main_panel_cardView);
         mMainHydrantImageIMG = (ImageView) findViewById(R.id.main_hydrant_image_img);
-        mMainRL = (LinearLayout) findViewById(R.id.main_ll);
+        mMainLL = (LinearLayout) findViewById(R.id.main_ll);
+        mMainRL = (RelativeLayout) findViewById(R.id.main_rl);
 
         //Button添加点击事件
         mDisplayList.setOnClickListener(this);
@@ -146,42 +147,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSlidingUpPanelLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-/*                int x = 0;
-                int y = 0;
-                if (x == 0) {
-                    Log.d("GETXY", "event.getX():" + event.getX());
-                    Log.d("GETXY", "event.getRawX():" + event.getRawX());
-                    x++;
-                }
-                if (y == 0) {
-                    Log.d("GETXY", "event.getY():" + event.getY());
-                    Log.d("GETXY", "event.getRawY():" + event.getRawY());
-                    y++;
-                }*/
-
-                if (event.getY() <= 1400) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mMainHydrantImageIMG.setVisibility(View.VISIBLE);
-                        }
-                    });
-
-                } if (event.getY() >1400) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mMainHydrantImageIMG.setVisibility(View.GONE);
-                        }
-                    });
-                }
-
-                Log.d("GETXY", "ViewTop: " + mMainRL.getTop());
-
-
-                Log.d("GETXY", "WindowsWidth: " + Tools.getScreenSize(MainActivity.this)[0]);
-                Log.d("GETXY", "WindowsHeight: " + Tools.getScreenSize(MainActivity.this)[1]);
                 return false;
+            }
+        });
+
+        mSlidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+
+                /**
+                 * 监听Panel位置信息变化，设置图片的上拉加载显示效果
+                 */
+                if (mMainRL.getTop()<=(Tools.getScreenSize(MainActivity.this)[1]-330-66)){
+                    top[1]=top[0];//记录上次位置
+                    top[0]=(int)mMainRL.getY();//获得当前位置
+                    if (top[1] != 0)
+                        top[2]=top[0]-top[1];//改变值
+                    top[3]=top[3]+top[2];
+                    if (top[3]<=-imageHeight){
+                            top[3]=-imageHeight;
+                    }
+                    if (top[3]>0){
+                        top[3]=0;
+                    }
+                    Tools.setMargins(mMainLL,0,-top[3],0,0);
+                }
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+
             }
         });
 
@@ -194,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //地图加载完成监听事件,设置地图显示的范围及中心点,地图加载完成后添加Mark监听事件
         MapTools.setOnMapLoadedCallback(baiduMap,onMarkerClickListener);
 
-        //地图单击事件
+        //地图单击事件，SlidingUpPanelLayout隐藏
         MapTools.setOnMapClickListener(baiduMap,this,mSlidingUpPanelLayout);
 
         //监听网络状态
@@ -236,31 +231,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final List<Hydrant> hydrantList = DataSupport.where("longitude like ? and latitude like ?", longitude+"",latitude+"").find(Hydrant.class);
         final Hydrant hydrant = hydrantList.get(0);
         mHydrant = hydrant;
+
+        //显示图片
+        Glide.with(MainActivity.this).load(mHydrant.getImg_url()).into(mMainHydrantImageIMG).getSize(new SizeReadyCallback() {
+            @Override
+            public void onSizeReady(int width, int height) {
+
+                //获取加载后图片高度
+                if (width>=height) {
+                    imageHeight =(int) height*Tools.getScreenSize(MainActivity.this)[0]/width;
+                } else {
+                    imageHeight =(int) width*Tools.getScreenSize(MainActivity.this)[0]/height;
+                }
+
+            }
+        });
+
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
                 //设置上划块高度
-                mSlidingUpPanelLayout.setPanelHeight(350);
+                mSlidingUpPanelLayout.setPanelHeight(330);
 
                 //上划块概述信息
                 mMainHydrantIdTV.setText("消防栓编号:" + mHydrant.getHydrant_id());
                 mMainPressureTV.setText("水压:"+mHydrant.getPressure() + " | ");
                 mMainStatusTV.setText(Tools.estimateStatus(mHydrant.getStatus()));
 
-                //显示图片
-                Glide.with(MainActivity.this).load(mHydrant.getImg_url()).into(mMainHydrantImageIMG).getSize(new SizeReadyCallback() {
-                    @Override
-                    public void onSizeReady(int width, int height) {
-                        //获取加载后图片大小
-                        imageWidth = width;
-                        imageHeight = height;
-                    }
-                });
-
-
-
-
+                //设置状态信息字体颜色
                 if (mHydrant.getStatus() != 0) {
                     mMainStatusTV.setTextColor(Color.RED);
                 } else {
@@ -287,6 +287,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 //上划块更新时间
                 mMainTimeTV.setText("更新时间 " + mHydrant.getTime());
+
             }
         });
     }
